@@ -16,52 +16,36 @@ _Learn how to test **Infrastructure as Code** on AWS cloud with Terratest._
 </header>
 
 <!--
-  <<< Author notes: Course start >>>
-  Include start button, a note about Actions minutes,
-  and tell the learner why they should take the course.
+  <<< Author notes: Step 1 >>>
+  Choose 3-5 steps for your course.
+  The first step is always the hardest, so pick something easy!
+  Link to docs.github.com for further explanations.
+  Encourage users to open new tabs for steps!
 -->
 
-## Welcome
+## Step 1: Check missing parts in Terraform code
 
-How you ever manually tested infrastructure deployed on AWS ? Is your IaC executed in pipeline ? Do you need automated way to prove, that code, which you prepared, is working ? If you've answere _yes_ for any of this questions, then that course could help you with automating tests of the infrastructure, which you can use in your pipeline and which will help in proving, that code is working as expected.
+_Welcome to "aws-terratest-course"! :wave:_
 
-- **Who is this for**: DevOps engineers, Cloud engineers.
-- **What you'll learn**: Build basic tests for IaC on AWS
-- **What you'll build**: Tests for simple IaC.
-- **Prerequisites**: Basic knowledge about AWS and Terraform.
-- **How long**: This course takes less than 1 hour to complete.
+**What is the goal of step 1 ?**: In first step we are going to familiarize with simple architecture of the infrastructure and after that we will update 1 missing part in Terraform code.
 
-In this course, you will:
+### :keyboard: Activity: Check missing parts in Terraform code
 
-1. Check out architecture diagram and fill missing parts in Terraform code to deploy infrastructure.
-2. Extend skeleton with Terratest to check Terraform output values.
-3. Verify if Terraform configuration is idempotent.
-4. Override variables values defined in `terraform.tfvars`
-5. Destroy whole infrastructure after finishing tests.
-
-**Please note, that IaC prepared in course is using resources from [AWS Free Tier](https://aws.amazon.com/free/).**
-
-### How to start this course
-
-<!-- For start course, run in JavaScript:
-'https://github.com/new?' + new URLSearchParams({
-  template_owner: 'sebastianczech',
-  template_name: 'aws-terratest-course',
-  owner: '@me',
-  name: 'my-aws-terratest-course',
-  description: 'My clone repository of aws-terratest-course',
-  visibility: 'public',
-}).toString()
--->
-
-[![start-course](https://user-images.githubusercontent.com/1221423/235727646-4a590299-ffe5-480d-8cd5-8194ea184546.svg)](https://github.com/new?template_owner=sebastianczech&template_name=aws-terratest-course&owner=%40me&name=my-aws-terratest-course&description=My+clone+repository+of+aws-terratest-course&visibility=public)
-
-1. Right-click **Start course** and open the link in a new tab.
-2. In the new tab, most of the prompts will automatically fill in for you.
-   - For owner, choose your personal account or an organization to host the repository.
-   - We recommend creating a public repository, as private repositories will [use Actions minutes](https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions).
-   - Scroll down and click the **Create repository** button at the bottom of the form.
-3. After your new repository is created, wait about 20 seconds, then refresh the page. Follow the step-by-step instructions in the new repository's README.
+1. Open a new browser tab, and work on the steps in your second tab while you read the instructions in this tab.
+2. Review architecture for simple infrastructure defined in Terraform code in [infra](infra) folder.![](../../design/architecture_diagram.png)
+3. On your local machine [configure authentication for AWS provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration).
+4. Clone created repository
+5. Get latest ``main`` branch: ``git pull``.
+6. Go to ``infra`` folder using command: ``cd infra``.
+7. Initialize Terraform by command: ``terraform init``.
+8. Review arguments for [aws_lambda_function_url](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function_url.html) resource.
+9. Define ``function_name`` for resource ``aws_lambda_function_url`` and ``aws_lambda_permission``.
+10. Try to deploy infrastructure using command: ``terraform apply``.
+11. If succeeded, destroy infrastructure using command: ``terraform apply -destroy``.
+12. Commit changes using command: ``git commit -am "Finish step 1"``.
+13. Push changes using command: ``git push``.
+14. Wait about 20 seconds then refresh this page (the one you're following instructions from). [GitHub Actions](https://docs.github.com/en/actions) will automatically update to the next step, if your solution is correct.
+15. If next step is not automatially updated, verify results in ``Actions`` tab in GitHub, fix code and repeat steps 8-13 one more time.
 
 <footer>
 
