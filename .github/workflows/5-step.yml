@@ -1,0 +1,82 @@
+name: Step 5, Check if there is defer with destroy
+
+# This step triggers after push change into branch `main`
+# This workflow updates from step 5 to step X.
+
+# This will run every time we create push a commit to `main`.
+# Reference: https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows
+on:
+  workflow_dispatch:
+  # Add events that trigger this workflow.
+  push:
+    branches:
+      - main
+
+# Reference: https://docs.github.com/en/actions/security-guides/automatic-token-authentication
+permissions:
+  # Need `contents: read` to checkout the repository.
+  # Need `contents: write` to update the step metadata.
+  contents: write
+
+jobs:
+  # Get the current step to only run the main job when the learner is on the same step.
+  get_current_step:
+    name: Check current step number
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - id: get_step
+        run: |
+          echo "current_step=$(cat ./.github/steps/-step.txt)" >> $GITHUB_OUTPUT
+    outputs:
+      current_step: ${{ steps.get_step.outputs.current_step }}
+
+  check_step5_terratest_defer_destroy:
+    name: Check if there is defer with destroy
+    needs: get_current_step
+    runs-on: ubuntu-latest
+    if: >-
+      ${{ !github.event.repository.is_template
+          && needs.get_current_step.outputs.current_step == 5 }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - id: check_step1_main_tf
+        name: Check test/main_test.go
+        run: |
+          grep 'defer terraform.Destroy(t, terraformOptions)' test/main_test.go
+      - name: Hint
+        if: failure()
+        run: echo "::error file=test/main_test.go,line=1::Use terraform.Destroy() function"
+
+  after_check_solution:
+    name: Go to next step after checking solution
+    needs: check_step5_terratest_defer_destroy
+
+    # We will only run this action when:
+    # 1. This repository isn't the template repository.
+    # 2. The step is currently 5.
+    # Reference: https://docs.github.com/en/actions/learn-github-actions/contexts
+    # Reference: https://docs.github.com/en/actions/learn-github-actions/expressions
+    if: >-
+      ${{ !github.event.repository.is_template
+          && needs.get_current_step.outputs.current_step == 5 }}
+
+    # We'll run Ubuntu for performance instead of Mac or Windows.
+    runs-on: ubuntu-latest
+
+    steps:
+      # We'll need to check out the repository so that we can edit the README.
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Let's get all the branches.
+
+      # In README.md, switch step 5 for step X.
+      - name: Update to step X
+        uses: skills/action-update-step@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          from_step: 5
+          to_step: X
